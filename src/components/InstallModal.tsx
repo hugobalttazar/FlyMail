@@ -98,10 +98,10 @@ export const InstallModal: React.FC<InstallModalProps> = ({ isOpen, onClose }) =
             <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-950/50 space-y-2">
               <div className="flex items-center justify-between">
                 <span className="font-semibold text-slate-900 dark:text-slate-100">
-                  1. Baixar o projeto e instalar as dependências
+                  1. Instalar dependências desktop (com resolução limpa)
                 </span>
                 <button
-                  onClick={() => copyToClipboard('npm install electron electron-builder --save-dev', 1)}
+                  onClick={() => copyToClipboard('npm install electron electron-builder --save-dev --legacy-peer-deps', 1)}
                   className="flex items-center gap-1 text-[11px] text-sky-600 dark:text-sky-400 hover:underline"
                 >
                   {copiedStep === 1 ? <CheckCircle className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
@@ -109,18 +109,21 @@ export const InstallModal: React.FC<InstallModalProps> = ({ isOpen, onClose }) =
                 </button>
               </div>
               <div className="p-2.5 rounded-lg bg-slate-900 text-slate-100 font-mono text-[11px] flex items-center justify-between">
-                <code>npm install electron electron-builder --save-dev</code>
+                <code>npm install electron electron-builder --save-dev --legacy-peer-deps</code>
               </div>
+              <p className="text-[10px] text-slate-400">
+                A flag <code>--legacy-peer-deps</code> evita qualquer divergência entre subversões do Vite/esbuild no npm.
+              </p>
             </div>
 
             {/* Step 2 */}
             <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-950/50 space-y-2">
               <div className="flex items-center justify-between">
                 <span className="font-semibold text-slate-900 dark:text-slate-100">
-                  2. Gerar o arquivo .exe do AeroMail
+                  2. Gerar o instalador .exe do AeroMail
                 </span>
                 <button
-                  onClick={() => copyToClipboard('npm run build && npx electron-builder --win nsis', 2)}
+                  onClick={() => copyToClipboard('npm run electron:build', 2)}
                   className="flex items-center gap-1 text-[11px] text-sky-600 dark:text-sky-400 hover:underline"
                 >
                   {copiedStep === 2 ? <CheckCircle className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
@@ -128,10 +131,10 @@ export const InstallModal: React.FC<InstallModalProps> = ({ isOpen, onClose }) =
                 </button>
               </div>
               <div className="p-2.5 rounded-lg bg-slate-900 text-slate-100 font-mono text-[11px] flex items-center justify-between">
-                <code>npm run build && npx electron-builder --win nsis</code>
+                <code>npm run electron:build</code>
               </div>
               <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                O arquivo instalador será criado na pasta <code>dist/AeroMail-Setup-1.0.0.exe</code>. Bastará dar dois cliques para instalar no seu Windows!
+                O arquivo instalador será criado na pasta <code>dist-electron/AeroMail Setup 1.0.0.exe</code>. Bastará dar dois cliques para instalar no seu Windows com atalho na Área de Trabalho e Menu Iniciar!
               </p>
             </div>
 

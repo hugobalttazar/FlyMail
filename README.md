@@ -46,24 +46,32 @@ Cliente de e-mail rápido, modular e elegante inspirado na ergonomia e nos recur
 
 ## 💻 Como Gerar o Instalador Executável (`.exe`) para Windows
 
-A arquitetura do AeroMail foi construída de forma desacoplada da web, incluindo os processos principais do Electron em `/electron/main.cjs` e `/electron/preload.cjs`.
+A arquitetura do AeroMail foi construída de forma desacoplada da web, incluindo os processos principais do Electron em `/electron/main.cjs` e `/electron/preload.cjs`, com instalador oficial NSIS configurado no `package.json`.
 
-### Passo a Passo no Windows:
+### Passo a Passo no Windows (PowerShell / Terminal):
 
-1. **Baixe ou clone o projeto** para o seu computador.
-2. Abra o terminal na pasta raiz do projeto e instale o Electron e o empacotador:
-   ```bash
-   npm install electron electron-builder --save-dev
+1. **Abra o terminal** na pasta do projeto:
+   ```powershell
+   cd ~\Documents\repositorio-local\FlyMail
    ```
-3. Compile a interface web otimizada:
-   ```bash
-   npm run build
+
+2. **Instale as dependências do Electron** utilizando a flag `--legacy-peer-deps` (para garantir resolução limpa com o Vite):
+   ```powershell
+   npm install electron electron-builder --save-dev --legacy-peer-deps
    ```
-4. Gere o arquivo instalador `.exe`:
-   ```bash
-   npx electron-builder --win nsis
+
+3. **Gere o instalador `.exe` em 1 comando:**
+   ```powershell
+   npm run electron:build
    ```
-5. **Pronto!** O arquivo `AeroMail-Setup-1.0.0.exe` será gerado automaticamente dentro da pasta `dist/`. Basta dar dois cliques para instalar no Windows com atalho no Menu Iniciar e na Área de Trabalho.
+   *(Este comando compila o React otimizado com o Vite e executa o Electron Builder automaticamente).*
+
+4. **Resultado:**
+   O assistente de instalação clássico do Windows será gerado na pasta:
+   ```text
+   dist-electron\AeroMail Setup 1.0.0.exe
+   ```
+   Basta dar **dois cliques no arquivo `.exe`** para instalar o aplicativo no Windows com atalho automático na **Área de Trabalho**, no **Menu Iniciar** e suporte à **bandeja do sistema (System Tray)**.
 
 ---
 
