@@ -1,0 +1,6 @@
+{
+  "name": "AeroMail - Modern Desktop & Web Email Client",
+  "description": "Cliente de e-mail rápido, modular e elegante inspirado no Mailbird, com caixa de entrada unificada, leitura rápida (Speed Reader), painel de utilitários integrados e pronto para empacotamento desktop .exe.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
