@@ -56,12 +56,36 @@ function createWindow() {
     }
   });
 
-  // Abre links externos no navegador padrão do usuário em vez de dentro do Electron
+  // Gerenciamento de janelas e popups: permite popups de autenticação Google/Firebase e abre links comuns no navegador
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    // Permite que o popup de autenticação do Google e Firebase Auth opere dentro da sessão do Electron
+    const isAuthPopup = 
+      url.includes('accounts.google.com') ||
+      url.includes('firebaseapp.com') ||
+      url.includes('googleapis.com') ||
+      url.includes('/__/auth/');
+
+    if (isAuthPopup) {
+      return {
+        action: 'allow',
+        overrideBrowserWindowOptions: {
+          width: 500,
+          height: 640,
+          autoHideMenuBar: true,
+          webPreferences: {
+            nodeIntegration: false,
+            contextIsolation: true,
+          },
+        },
+      };
+    }
+
+    // Links externos comuns (documentação, portais) abrem no navegador padrão do Windows
     if (url.startsWith('https:') || url.startsWith('http:')) {
       shell.openExternal(url);
       return { action: 'deny' };
     }
+
     return { action: 'allow' };
   });
 

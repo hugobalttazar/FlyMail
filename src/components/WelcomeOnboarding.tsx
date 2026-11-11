@@ -37,9 +37,19 @@ export const WelcomeOnboarding: React.FC<WelcomeOnboardingProps> = ({
       }
     } catch (err: any) {
       console.error('Falha no login Google:', err);
-      setErrorMessage(
-        err.message || 'Não foi possível completar o login com o Google. Verifique a conexão e tente novamente.'
-      );
+      let msg = 'Não foi possível completar o login com o Google.';
+      
+      if (err.code === 'auth/popup-closed-by-user') {
+        msg = 'A janela de login do Google foi fechada antes da confirmação. Clique novamente para autorizar.';
+      } else if (err.code === 'auth/popup-blocked') {
+        msg = 'O popup de login foi bloqueado pelo sistema. Permita janelas pop-up ou utilize a configuração manual abaixo.';
+      } else if (err.code === 'auth/unauthorized-domain') {
+        msg = 'Domínio de execução em validação de segurança. Você pode conectar instantaneamente usando a configuração manual abaixo.';
+      } else if (err.message) {
+        msg = err.message;
+      }
+      
+      setErrorMessage(msg);
     } finally {
       setIsGoogleLoading(false);
     }
