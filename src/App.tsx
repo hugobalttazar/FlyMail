@@ -50,6 +50,18 @@ import {
 import {
   WelcomeOnboarding,
 } from './components/WelcomeOnboarding';
+import {
+  DriveView,
+} from './components/DriveView';
+import {
+  DocsView,
+} from './components/DocsView';
+
+import {
+  sendGmailMessage,
+  fetchGoogleCalendarEvents,
+  fetchGoogleContacts,
+} from './utils/googleWorkspaceApi';
 
 import {
   Account,
@@ -388,9 +400,25 @@ export default function App() {
   }, []);
 
   // Quick Reply inside thread
-  const handleQuickReply = useCallback((threadId: string, replyText: string) => {
-    const activeAcc = accounts[0];
+  const handleQuickReply = useCallback(async (threadId: string, replyText: string) => {
+    const activeAcc = accounts.find(a => a.id === selectedAccountId) || accounts[0];
     const newMsgId = `msg_${Date.now()}`;
+
+    // Disparo real via Gmail API se a conta conectada for Google
+    const targetThread = threads.find(t => t.id === threadId);
+    if (targetThread && activeAcc) {
+      const recipient = targetThread.participants.find(p => p.email !== activeAcc.email)?.email || targetThread.participants[0]?.email;
+      if (recipient && activeAcc.provider === 'google') {
+        sendGmailMessage(recipient, activeAcc.email, `Re: ${targetThread.subject}`, replyText).then((res) => {
+          if (res.success) {
+            console.log('[FlyMail] Mensagem despachada com sucesso pelo Gmail oficial! ID:', res.messageId);
+          } else {
+            console.warn('[FlyMail] Envio via Gmail:', res.error);
+          }
+        });
+      }
+    }
+
     setThreads(prev => prev.map(t => {
       if (t.id === threadId) {
         const updatedMessages = [
@@ -426,7 +454,7 @@ export default function App() {
       }
       return t;
     }));
-  }, [accounts]);
+  }, [accounts, threads, selectedAccountId]);
 
   // Forward email
   const handleForward = useCallback((thread: EmailThread) => {
@@ -493,6 +521,17 @@ export default function App() {
         const { updatedThread } = applyActionsToThread(processedThread, flt.actions);
         processedThread = updatedThread;
       }
+    }
+
+    // Disparo real via Gmail API se a conta for Google
+    if (acc?.provider === 'google' && draft.to) {
+      sendGmailMessage(draft.to, acc.email, draft.subject, draft.body).then((res) => {
+        if (res.success) {
+          console.log('[FlyMail] E-mail despachado com sucesso pelo Gmail API oficial! MessageId:', res.messageId);
+        } else {
+          console.warn('[FlyMail] Envio via Gmail API:', res.error);
+        }
+      });
     }
 
     setThreads(prev => [processedThread, ...prev]);
@@ -817,6 +856,20 @@ export default function App() {
                 setTags(prev => [...prev, newTag]);
               }
             }}
+            onDeleteTag={(tagId, tagName) => {
+              if (window.confirm(`Deseja excluir o marcador "${tagName}"? Ele será removido de todas as mensagens vinculadas.`)) {
+                setTags(prev => prev.filter(t => t.id !== tagId));
+                setThreads(prev => prev.map(th => ({
+                  ...th,
+                  tags: th.tags.filter(tid => tid !== tagId),
+                  messages: th.messages.map(m => ({
+                    ...m,
+                    tags: m.tags.filter(tid => tid !== tagId),
+                  })),
+                })));
+                if (selectedTagId === tagId) setSelectedTagId(null);
+              }
+            }}
           />
 
           {/* 2B. Email List Column (Central Message List with Hover Actions) */}
@@ -842,7 +895,6 @@ export default function App() {
             onToggleSelectThread={handleToggleSelectThread}
             onSelectAll={handleSelectAll}
             onRefresh={() => {
-              // Simulated instant sync feedback
               const originalCount = threads.length;
               alert(`Sincronização concluída! ${originalCount} conversas atualizadas.`);
             }}
@@ -890,6 +942,18 @@ export default function App() {
           onAddTask={handleAddTask}
           onDeleteTask={handleDeleteTask}
         />
+      )}
+
+      {/* 6. Google Drive View (Manipular, Visualizar, Editar, Excluir) */}
+      {activeView === 'drive' && (
+        <DriveView
+          onOpenDoc={(docUrl) => window.open(docUrl, '_blank')}
+        />
+      )}
+
+      {/* 7. Google Docs View (Criar e Colaborar em Documentos) */}
+      {activeView === 'docs' && (
+        <DocsView />
       )}
 
       {/* 6. Retractable Right Sidebar (Mailbird Side Panel: Calendar/Tasks/Contacts) */}

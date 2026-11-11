@@ -1,4 +1,17 @@
-export type AppView = 'mail' | 'calendar' | 'contacts' | 'tasks' | 'settings';
+export type AppView = 'mail' | 'calendar' | 'contacts' | 'tasks' | 'drive' | 'docs' | 'settings';
+
+export interface DriveFile {
+  id: string;
+  name: string;
+  mimeType: string;
+  iconLink?: string;
+  webViewLink?: string;
+  thumbnailLink?: string;
+  modifiedTime?: string;
+  size?: string;
+  owners?: { displayName: string; emailAddress: string }[];
+  shared?: boolean;
+}
 
 export type ThemeAccent = 'blue' | 'indigo' | 'violet' | 'emerald' | 'amber' | 'rose';
 

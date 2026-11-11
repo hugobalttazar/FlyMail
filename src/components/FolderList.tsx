@@ -24,6 +24,7 @@ interface FolderListProps {
   unreadCounts: Record<string, number>;
   onOpenCompose: () => void;
   onCreateTagPrompt: () => void;
+  onDeleteTag: (tagId: string, tagName: string) => void;
 }
 
 export const FolderList: React.FC<FolderListProps> = ({
@@ -36,6 +37,7 @@ export const FolderList: React.FC<FolderListProps> = ({
   unreadCounts,
   onOpenCompose,
   onCreateTagPrompt,
+  onDeleteTag,
 }) => {
   const folders = [
     { id: 'inbox', label: 'Caixa de Entrada', icon: Inbox, countKey: 'inbox' },
@@ -130,30 +132,46 @@ export const FolderList: React.FC<FolderListProps> = ({
             const count = unreadCounts[`tag_${tag.id}`] || 0;
 
             return (
-              <button
+              <div
                 key={tag.id}
-                onClick={() => {
-                  onSelectTag(tag.id);
-                }}
-                className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                className={`group w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors ${
                   isSelected
                     ? 'bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold'
                     : 'text-slate-600 dark:text-slate-300 hover:bg-slate-200/50 dark:hover:bg-slate-800/50'
                 }`}
               >
-                <div className="flex items-center gap-2.5 min-w-0">
+                <button
+                  type="button"
+                  onClick={() => onSelectTag(tag.id)}
+                  className="flex items-center gap-2.5 min-w-0 flex-1 text-left cursor-pointer"
+                >
                   <span
                     className="w-2.5 h-2.5 rounded-full flex-shrink-0"
                     style={{ backgroundColor: tag.color }}
                   />
                   <span className="truncate">{tag.name}</span>
+                </button>
+
+                <div className="flex items-center gap-1 flex-shrink-0">
+                  {count > 0 && (
+                    <span className="text-[10px] tabular-nums font-semibold px-1 rounded bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+                      {count}
+                    </span>
+                  )}
+                  {/* Botão de Excluir Marcador */}
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDeleteTag(tag.id, tag.name);
+                    }}
+                    title={`Excluir marcador "${tag.name}"`}
+                    className="opacity-0 group-hover:opacity-100 p-1 rounded text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/40 transition-all cursor-pointer"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
                 </div>
-                {count > 0 && (
-                  <span className="text-[10px] tabular-nums font-semibold px-1 rounded bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
-                    {count}
-                  </span>
-                )}
-              </button>
+              </div>
             );
           })}
         </div>

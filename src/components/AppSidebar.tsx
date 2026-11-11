@@ -11,7 +11,9 @@ import {
   Download,
   PanelRightClose,
   PanelRightOpen,
-  Plus
+  Plus,
+  HardDrive,
+  FileText
 } from 'lucide-react';
 import { Account, AppView } from '../types/mail';
 
@@ -180,6 +182,32 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
           }`}
         >
           <CheckSquare className="w-5 h-5" />
+        </button>
+
+        {/* Google Drive (Visualizar, Editar, Excluir) */}
+        <button
+          onClick={() => onChangeView('drive')}
+          title="Google Drive - Seus Arquivos na Nuvem"
+          className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${
+            activeView === 'drive'
+              ? 'bg-amber-500/20 text-amber-400 ring-1 ring-amber-500/50'
+              : 'text-slate-400 hover:text-amber-400 hover:bg-slate-800/60'
+          }`}
+        >
+          <HardDrive className="w-5 h-5" />
+        </button>
+
+        {/* Google Docs (Criar e Editar Documentos) */}
+        <button
+          onClick={() => onChangeView('docs')}
+          title="Google Docs - Documentos em Tempo Real"
+          className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${
+            activeView === 'docs'
+              ? 'bg-blue-500/20 text-blue-400 ring-1 ring-blue-500/50'
+              : 'text-slate-400 hover:text-blue-400 hover:bg-slate-800/60'
+          }`}
+        >
+          <FileText className="w-5 h-5" />
         </button>
       </nav>
 
