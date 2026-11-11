@@ -79,4 +79,4 @@ A arquitetura do FlyMail foi construída de forma desacoplada da web, incluindo 
 
 - **Sanitização de Dados:** Todo o conteúdo dinâmico é tipado estritamente em TypeScript.
 - **Isolamento de Contexto no Electron:** O `preload.cjs` roda com `contextIsolation: true` e `nodeIntegration: false`, impedindo injeções de código no processo nativo do sistema operacional.
-- **Persistência Local Segura:** Preferências e dados são sincronizados no `localStorage` do navegador ou cache seguro do Electron sem vazamento de chaves ou segredos.
+- **Persistência Local Segura:** Preferências e dados são sincronizados no `localStorage` do navegador ou cache seguro do Electron sem vazamento de chaves ou segredos..
