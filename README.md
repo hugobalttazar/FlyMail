@@ -1,6 +1,6 @@
-# AeroMail — Modern Desktop & Web Email Client
+# FlyMail — Modern Desktop & Web Email Client
 
-Cliente de e-mail rápido, modular e elegante inspirado na ergonomia e nos recursos aclamados do **Mailbird**, desenvolvido com **React 19, TypeScript e Tailwind CSS**, com arquitetura desacoplada e 100% preparada para empacotamento desktop nativo em instalador **`.exe`** para Windows via Electron.
+Cliente de e-mail rápido, modular e elegante inspirado na agilidade do **Mailbird**, desenvolvido com **React 19, TypeScript e Tailwind CSS**, com autenticação direta **Google OAuth 2.0 em 1 clique**, arquitetura desacoplada e 100% preparada para empacotamento desktop nativo em instalador **`.exe`** para Windows via Electron.
 
 ---
 
@@ -46,7 +46,7 @@ Cliente de e-mail rápido, modular e elegante inspirado na ergonomia e nos recur
 
 ## 💻 Como Gerar o Instalador Executável (`.exe`) para Windows
 
-A arquitetura do AeroMail foi construída de forma desacoplada da web, incluindo os processos principais do Electron em `/electron/main.cjs` e `/electron/preload.cjs`, com instalador oficial NSIS configurado no `package.json`.
+A arquitetura do FlyMail foi construída de forma desacoplada da web, incluindo os processos principais do Electron em `/electron/main.cjs` e `/electron/preload.cjs`, com instalador oficial NSIS configurado no `package.json`.
 
 ### Passo a Passo no Windows (PowerShell / Terminal):
 
@@ -69,7 +69,7 @@ A arquitetura do AeroMail foi construída de forma desacoplada da web, incluindo
 4. **Resultado:**
    O assistente de instalação clássico do Windows será gerado na pasta:
    ```text
-   dist-electron\AeroMail Setup 1.0.0.exe
+   dist-electron\FlyMail Setup 1.0.0.exe
    ```
    Basta dar **dois cliques no arquivo `.exe`** para instalar o aplicativo no Windows com atalho automático na **Área de Trabalho**, no **Menu Iniciar** e suporte à **bandeja do sistema (System Tray)**.
 

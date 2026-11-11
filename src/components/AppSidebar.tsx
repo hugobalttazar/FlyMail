@@ -49,16 +49,16 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
   return (
     <aside 
       className="w-16 flex-shrink-0 bg-slate-900 text-slate-300 flex flex-col items-center py-3 border-r border-slate-800 z-20 select-none"
-      aria-label="Barra de Navegação Principal do AeroMail"
+      aria-label="Barra de Navegação Principal do FlyMail"
     >
-      {/* Brand Icon (Mailbird-inspired feather/aero wing concept) */}
+      {/* Brand Icon */}
       <div className="mb-4">
         <button
           onClick={() => {
             onChangeView('mail');
             onSelectAccount(null);
           }}
-          title="AeroMail - Início"
+          title="FlyMail - Início"
           className="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-sky-500/20 hover:scale-105 active:scale-95 transition-all"
         >
           <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
@@ -217,7 +217,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
         {/* Settings Dialog */}
         <button
           onClick={onOpenSettings}
-          title="Configurações do AeroMail"
+          title="Configurações do FlyMail"
           className="w-10 h-10 rounded-xl flex items-center justify-center text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors"
         >
           <Settings className="w-5 h-5" />

@@ -31,7 +31,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({ events, onAddEvent }
         <div className="flex items-center gap-3">
           <CalendarIcon className="w-5 h-5 text-sky-500" />
           <h2 className="text-sm font-bold text-slate-900 dark:text-white">
-            Calendário Integrado do AeroMail
+            Calendário Integrado do FlyMail
           </h2>
           <span className="text-xs text-slate-400 font-medium">Novembro 2026</span>
         </div>
@@ -90,7 +90,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({ events, onAddEvent }
                   {hasEvents && (
                     <div className="space-y-1">
                       <div className="text-[10px] truncate px-1.5 py-0.5 rounded bg-sky-100 dark:bg-sky-900 text-sky-800 dark:text-sky-200 font-medium">
-                        Daily AeroMail
+                        Daily FlyMail
                       </div>
                       <div className="text-[10px] truncate px-1.5 py-0.5 rounded bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 font-medium">
                         Demo .EXE

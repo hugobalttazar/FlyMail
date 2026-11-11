@@ -40,7 +40,7 @@ export const PROVIDER_PRESETS: Record<EmailProviderType, ProviderPresetInfo> = {
         'Acesse myaccount.google.com e vá para a aba "Segurança".',
         'Em "Como você faz login no Google", certifique-se de que a "Verificação em duas etapas" está ativada.',
         'Clique em "Senhas de app" (ou pesquise por "Senhas de app").',
-        'Crie uma nova senha de app com o nome "BirdMail" e cole o código de 16 letras aqui.',
+        'Crie uma nova senha de app com o nome "FlyMail" e cole o código de 16 letras aqui.',
       ],
       officialUrl: 'https://myaccount.google.com/apppasswords',
     },
@@ -86,7 +86,7 @@ export const PROVIDER_PRESETS: Record<EmailProviderType, ProviderPresetInfo> = {
       steps: [
         'Acesse o site oficial da Apple ID: appleid.apple.com e faça login.',
         'Na seção "Início de sessão e segurança", clique em "Senhas específicas de app".',
-        'Selecione "Gerar uma senha específica de app" e digite "BirdMail".',
+        'Selecione "Gerar uma senha específica de app" e digite "FlyMail".',
         'Copie a senha no formato (ex: abcd-efgh-ijkl-mnop) e cole no campo de senha abaixo.',
       ],
       officialUrl: 'https://appleid.apple.com/account/manage',
@@ -110,7 +110,7 @@ export const PROVIDER_PRESETS: Record<EmailProviderType, ProviderPresetInfo> = {
       steps: [
         'Acesse login.yahoo.com/account/security.',
         'Clique em "Gerar senha de aplicativo".',
-        'Selecione "Outro aplicativo", nomeie como "BirdMail" e copie a senha gerada.',
+        'Selecione "Outro aplicativo", nomeie como "FlyMail" e copie a senha gerada.',
       ],
       officialUrl: 'https://login.yahoo.com/account/security',
     },

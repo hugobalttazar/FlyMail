@@ -18,6 +18,7 @@ interface SettingsModalProps {
   onClose: () => void;
   accounts: Account[];
   onAddAccount: (name: string, email: string, color: string) => void;
+  onDeleteAccount: (accountId: string) => void;
   darkMode: boolean;
   onToggleDarkMode: () => void;
   accentColor: ThemeAccent;
@@ -32,6 +33,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   onClose,
   accounts,
   onAddAccount,
+  onDeleteAccount,
   darkMode,
   onToggleDarkMode,
   accentColor,
@@ -83,7 +85,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
         {/* Top Header */}
         <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-950/40">
           <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-            Configurações do AeroMail
+            Configurações do FlyMail
           </h3>
           <button
             onClick={onClose}
@@ -247,30 +249,61 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 )}
 
                 <div className="space-y-2">
-                  {accounts.map((acc) => (
-                    <div
-                      key={acc.id}
-                      className="p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/40 flex items-center justify-between"
-                    >
-                      <div className="flex items-center gap-3">
-                        <span
-                          className="w-4 h-4 rounded-full flex-shrink-0"
-                          style={{ backgroundColor: acc.color }}
-                        />
-                        <div>
-                          <div className="text-xs font-semibold text-slate-900 dark:text-white">
-                            {acc.name}
-                          </div>
-                          <div className="text-[11px] text-slate-400 font-mono">
-                            {acc.email}
+                  {accounts.length === 0 ? (
+                    <div className="p-8 text-center border border-dashed border-slate-200 dark:border-slate-800 rounded-xl">
+                      <p className="text-xs text-slate-400 mb-2">Nenhuma conta conectada no momento.</p>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          onClose();
+                          onOpenAccountWizard();
+                        }}
+                        className="text-xs font-semibold text-sky-500 hover:underline"
+                      >
+                        Conectar sua primeira conta agora
+                      </button>
+                    </div>
+                  ) : (
+                    accounts.map((acc) => (
+                      <div
+                        key={acc.id}
+                        className="p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/40 flex items-center justify-between"
+                      >
+                        <div className="flex items-center gap-3">
+                          <span
+                            className="w-4 h-4 rounded-full flex-shrink-0"
+                            style={{ backgroundColor: acc.color }}
+                          />
+                          <div>
+                            <div className="text-xs font-semibold text-slate-900 dark:text-white">
+                              {acc.name}
+                            </div>
+                            <div className="text-[11px] text-slate-400 font-mono">
+                              {acc.email}
+                            </div>
                           </div>
                         </div>
+
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-mono">
+                            {acc.provider.toUpperCase()}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (window.confirm(`Tem certeza que deseja excluir a conta "${acc.name}" (${acc.email}) do FlyMail? Todas as mensagens sincronizadas desta conta serão removidas deste dispositivo.`)) {
+                                onDeleteAccount(acc.id);
+                              }
+                            }}
+                            title="Excluir conta do FlyMail"
+                            className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
                       </div>
-                      <span className="text-[11px] px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-mono">
-                        {acc.provider.toUpperCase()}
-                      </span>
-                    </div>
-                  ))}
+                    ))
+                  )}
                 </div>
               </div>
             )}
@@ -379,10 +412,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 <div className="p-4 rounded-xl border border-sky-200 dark:border-sky-900/50 bg-sky-50/50 dark:bg-sky-950/20 space-y-2">
                   <div className="flex items-center gap-2 text-sky-700 dark:text-sky-300 font-bold text-xs">
                     <Laptop className="w-4 h-4" />
-                    <span>AeroMail v1.0.0 (Desktop Ready)</span>
+                    <span>FlyMail v1.0.0 (Desktop Ready)</span>
                   </div>
                   <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                    Arquitetura profissional full-stack inspirada na experiência do Mailbird, sem violação de direitos autorais ou código proprietário. Totalmente preparada para empacotamento desktop nativo do Windows em pacote <code>.exe</code> via Electron.
+                    Arquitetura profissional full-stack inspirada na agilidade do Mailbird, sem violação de direitos autorais ou código proprietário. Totalmente preparada para empacotamento desktop nativo do Windows em pacote <code>.exe</code> via Electron com instalador NSIS.
                   </p>
                   <button
                     onClick={() => {

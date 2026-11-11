@@ -63,7 +63,7 @@ export const InstallModal: React.FC<InstallModalProps> = ({ isOpen, onClose }) =
                 <span>Instalador Nativo</span>
               </div>
               <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                Gera o instalador padrão <code>AeroMail-Setup-1.0.0.exe</code> com assistente de instalação clássico do Windows.
+                Gera o instalador padrão <code>FlyMail-Setup-1.0.0.exe</code> com assistente de instalação clássico do Windows.
               </p>
             </div>
 
@@ -120,7 +120,7 @@ export const InstallModal: React.FC<InstallModalProps> = ({ isOpen, onClose }) =
             <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-950/50 space-y-2">
               <div className="flex items-center justify-between">
                 <span className="font-semibold text-slate-900 dark:text-slate-100">
-                  2. Gerar o instalador .exe do AeroMail
+                  2. Gerar o instalador .exe do FlyMail
                 </span>
                 <button
                   onClick={() => copyToClipboard('npm run electron:build', 2)}
@@ -134,7 +134,7 @@ export const InstallModal: React.FC<InstallModalProps> = ({ isOpen, onClose }) =
                 <code>npm run electron:build</code>
               </div>
               <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                O arquivo instalador será criado na pasta <code>dist-electron/AeroMail Setup 1.0.0.exe</code>. Bastará dar dois cliques para instalar no seu Windows com atalho na Área de Trabalho e Menu Iniciar!
+                O arquivo instalador será criado na pasta <code>dist-electron/FlyMail Setup 1.0.0.exe</code>. Bastará dar dois cliques para instalar no seu Windows com atalho na Área de Trabalho e Menu Iniciar!
               </p>
             </div>
 
@@ -145,7 +145,7 @@ export const InstallModal: React.FC<InstallModalProps> = ({ isOpen, onClose }) =
                 <span>Instalação Imediata sem compilação (App de Janela Windows):</span>
               </div>
               <p className="text-[11px] text-amber-900/80 dark:text-amber-200/80 leading-relaxed">
-                Você também pode instalar esta aplicação <strong>agora mesmo</strong> no seu PC: no Google Chrome ou Microsoft Edge, clique no ícone de <strong>&quot;Instalar AeroMail&quot;</strong> na barra de endereços (ou Menu &gt; Aplicativos &gt; Instalar este site como aplicativo). Ele abrirá como uma janela de aplicativo dedicada do Windows, com atalho na Área de Trabalho e no Menu Iniciar!
+                Você também pode instalar esta aplicação <strong>agora mesmo</strong> no seu PC: no Google Chrome ou Microsoft Edge, clique no ícone de <strong>&quot;Instalar FlyMail&quot;</strong> na barra de endereços (ou Menu &gt; Aplicativos &gt; Instalar este site como aplicativo). Ele abrirá como uma janela de aplicativo dedicada do Windows, com atalho na Área de Trabalho e no Menu Iniciar!
               </p>
             </div>
           </div>

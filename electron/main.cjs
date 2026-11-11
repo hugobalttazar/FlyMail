@@ -1,6 +1,6 @@
 /**
- * AeroMail - Desktop Entrypoint (Electron)
- * Este arquivo é o processo principal nativo do Electron para rodar o AeroMail
+ * FlyMail - Desktop Entrypoint (Electron)
+ * Este arquivo é o processo principal nativo do Electron para rodar o FlyMail
  * como uma aplicação desktop instalável no Windows (.exe), Linux ou macOS.
  */
 
@@ -16,7 +16,7 @@ function createWindow() {
     height: 840,
     minWidth: 980,
     minHeight: 640,
-    title: 'AeroMail',
+    title: 'FlyMail',
     backgroundColor: '#0F172A',
     frame: true, // Mantém a barra de título nativa do Windows ou pode ser customizada
     webPreferences: {
@@ -35,13 +35,13 @@ function createWindow() {
     mainWindow.loadURL(process.env.ELECTRON_START_URL);
   } else {
     mainWindow.loadFile(indexPath).catch((err) => {
-      console.error('[AeroMail] Falha ao carregar index.html:', err);
+      console.error('[FlyMail] Falha ao carregar index.html:', err);
     });
   }
 
   // Monitora erros de carregamento para facilitar diagnósticos
   mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription, validatedURL) => {
-    console.error(`[AeroMail Error] Falha ao carregar recurso: ${validatedURL} (Código: ${errorCode}, ${errorDescription})`);
+    console.error(`[FlyMail Error] Falha ao carregar recurso: ${validatedURL} (Código: ${errorCode}, ${errorDescription})`);
   });
 
   // Atalhos úteis: F12 ou Ctrl+Shift+I abre o Console/DevTools para depuração, F5 recarrega

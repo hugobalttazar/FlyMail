@@ -1,5 +1,5 @@
 /**
- * AeroMail - Preload Script (Electron Context Isolation)
+ * FlyMail - Preload Script (Electron Context Isolation)
  * Expõe APIs seguras para a janela de renderização.
  */
 

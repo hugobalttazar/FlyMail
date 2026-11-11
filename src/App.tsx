@@ -47,6 +47,9 @@ import {
 import {
   AccountWizardModal,
 } from './components/AccountWizardModal';
+import {
+  WelcomeOnboarding,
+} from './components/WelcomeOnboarding';
 
 import {
   Account,
@@ -69,28 +72,26 @@ import {
 } from './utils/filterEngine';
 
 import {
-  INITIAL_ACCOUNTS,
   EMAIL_TAGS,
-  INITIAL_THREADS,
   MOCK_CONTACTS,
   MOCK_EVENTS,
   MOCK_TASKS,
 } from './data/mockEmails';
 
 export default function App() {
-  // Persistence with localStorage
+  // Persistence with localStorage (Inicia zerado se não houver dados salvos no PC)
   const [accounts, setAccounts] = useState<Account[]>(() => {
-    const saved = localStorage.getItem('aeromail_accounts');
-    return saved ? JSON.parse(saved) : INITIAL_ACCOUNTS;
+    const saved = localStorage.getItem('flymail_accounts') || localStorage.getItem('aeromail_accounts');
+    return saved ? JSON.parse(saved) : [];
   });
 
   const [threads, setThreads] = useState<EmailThread[]>(() => {
-    const saved = localStorage.getItem('aeromail_threads');
-    return saved ? JSON.parse(saved) : INITIAL_THREADS;
+    const saved = localStorage.getItem('flymail_threads') || localStorage.getItem('aeromail_threads');
+    return saved ? JSON.parse(saved) : [];
   });
 
   const [tags, setTags] = useState<EmailTag[]>(() => {
-    const saved = localStorage.getItem('aeromail_tags');
+    const saved = localStorage.getItem('flymail_tags') || localStorage.getItem('aeromail_tags');
     return saved ? JSON.parse(saved) : EMAIL_TAGS;
   });
 
@@ -156,12 +157,12 @@ export default function App() {
 
   // Sync accounts to localStorage
   useEffect(() => {
-    localStorage.setItem('aeromail_accounts', JSON.stringify(accounts));
+    localStorage.setItem('flymail_accounts', JSON.stringify(accounts));
   }, [accounts]);
 
   // Sync filters to localStorage
   useEffect(() => {
-    localStorage.setItem('aeromail_filters', JSON.stringify(filters));
+    localStorage.setItem('flymail_filters', JSON.stringify(filters));
   }, [filters]);
 
   // Sync dark mode class on HTML documentElement
@@ -171,17 +172,17 @@ export default function App() {
     } else {
       document.documentElement.classList.remove('dark');
     }
-    localStorage.setItem('aeromail_darkmode', JSON.stringify(darkMode));
+    localStorage.setItem('flymail_darkmode', JSON.stringify(darkMode));
   }, [darkMode]);
 
   // Sync threads to localStorage
   useEffect(() => {
-    localStorage.setItem('aeromail_threads', JSON.stringify(threads));
+    localStorage.setItem('flymail_threads', JSON.stringify(threads));
   }, [threads]);
 
   // Sync tasks to localStorage
   useEffect(() => {
-    localStorage.setItem('aeromail_tasks', JSON.stringify(tasks));
+    localStorage.setItem('flymail_tasks', JSON.stringify(tasks));
   }, [tasks]);
 
   // Active account object
@@ -629,9 +630,25 @@ export default function App() {
     setAccounts(prev => [...prev, newAcc]);
   }, []);
 
+  // Excluir conta conectada do FlyMail
+  const handleDeleteAccount = useCallback((accountId: string) => {
+    setAccounts(prev => prev.filter(acc => acc.id !== accountId));
+    // Remove threads associadas a esta conta para limpar os dados locais
+    setThreads(prev => prev.filter(t => t.accountId !== accountId));
+    // Se a conta excluída estava selecionada, volta para a Caixa Unificada
+    setSelectedAccountId(prev => (prev === accountId ? null : prev));
+  }, []);
+
   // Handle Full Account Connection from Provider Wizard (Gmail, Outlook, iCloud, IMAP)
   const handleAccountConnected = useCallback((newAccount: Account) => {
-    setAccounts(prev => [...prev, newAccount]);
+    setAccounts(prev => {
+      // Evita duplicidade se a mesma conta for autenticada novamente
+      const exists = prev.some(a => a.id === newAccount.id || a.email.toLowerCase() === newAccount.email.toLowerCase());
+      if (exists) {
+        return prev.map(a => a.id === newAccount.id || a.email.toLowerCase() === newAccount.email.toLowerCase() ? newAccount : a);
+      }
+      return [...prev, newAccount];
+    });
 
     // Cria e-mails de sincronização inicial na caixa de entrada da nova conta
     const providerLabel = newAccount.provider.toUpperCase();
@@ -639,10 +656,10 @@ export default function App() {
     const welcomeThread: EmailThread = {
       id: welcomeThreadId,
       accountId: newAccount.id,
-      subject: `Sua conta ${newAccount.name} (${providerLabel}) foi conectada ao BirdMail`,
-      snippet: `Configuração IMAP/SMTP sincronizada com sucesso. Seus e-mails e pastas já estão disponíveis...`,
+      subject: `Sua conta ${newAccount.name} (${providerLabel}) foi conectada ao FlyMail`,
+      snippet: `Configuração sincronizada com segurança máxima. Seus e-mails e pastas já estão disponíveis...`,
       participants: [
-        { name: `BirdMail Sync Engine (${providerLabel})`, email: `system-sync@birdmail.app` },
+        { name: `FlyMail Sync Engine (${providerLabel})`, email: `system-sync@flymail.app` },
         { name: newAccount.name, email: newAccount.email },
       ],
       lastMessageDate: 'Agora',
@@ -660,13 +677,13 @@ export default function App() {
           id: `msg_sync_${Date.now()}`,
           threadId: welcomeThreadId,
           accountId: newAccount.id,
-          from: { name: `BirdMail Sync (${providerLabel})`, email: `system-sync@birdmail.app` },
+          from: { name: `FlyMail Sync (${providerLabel})`, email: `system-sync@flymail.app` },
           to: [{ name: newAccount.name, email: newAccount.email }],
           date: 'Agora',
           timestamp: Date.now(),
-          subject: `Sua conta ${newAccount.name} (${providerLabel}) foi conectada ao BirdMail`,
-          snippet: `Configuração IMAP/SMTP sincronizada com sucesso.`,
-          bodyText: `Olá, ${newAccount.name}!\n\nSua conta ${newAccount.email} foi sincronizada com sucesso no BirdMail.\n\nDetalhes da Conexão:\n- Provedor: ${providerLabel}\n- Servidor de Entrada (IMAP): ${newAccount.connectionConfig?.incomingHost || 'imap.servidor.com'}:${newAccount.connectionConfig?.incomingPort || 993} (${newAccount.connectionConfig?.incomingSecurity || 'SSL'})\n- Servidor de Saída (SMTP): ${newAccount.connectionConfig?.outgoingHost || 'smtp.servidor.com'}:${newAccount.connectionConfig?.outgoingPort || 587} (${newAccount.connectionConfig?.outgoingSecurity || 'STARTTLS'})\n- Status de Criptografia: TLS Ativo (Segurança Ponta a Ponta)\n\nAgora você pode alternar para esta conta individualmente pelo ícone colorido na barra lateral esquerda ou visualizar todas as suas mensagens agregadas na Caixa Unificada (Unified Inbox).\n\nBoas leituras com o Speed Reader e alta produtividade!\nEquipe BirdMail`,
+          subject: `Sua conta ${newAccount.name} (${providerLabel}) foi conectada ao FlyMail`,
+          snippet: `Configuração sincronizada com segurança máxima.`,
+          bodyText: `Olá, ${newAccount.name}!\n\nSua conta ${newAccount.email} foi sincronizada com sucesso no FlyMail.\n\nDetalhes da Conexão:\n- Provedor: ${providerLabel}\n- Modo de Autenticação: ${newAccount.provider === 'google' ? 'Google OAuth 2.0 (Segurança Máxima Oficial)' : 'IMAP/SMTP com Criptografia TLS'}\n- Servidor de Entrada (IMAP): ${newAccount.connectionConfig?.incomingHost || 'imap.servidor.com'}:${newAccount.connectionConfig?.incomingPort || 993} (${newAccount.connectionConfig?.incomingSecurity || 'SSL'})\n- Servidor de Saída (SMTP): ${newAccount.connectionConfig?.outgoingHost || 'smtp.servidor.com'}:${newAccount.connectionConfig?.outgoingPort || 587} (${newAccount.connectionConfig?.outgoingSecurity || 'STARTTLS'})\n\nAgora você pode alternar para esta conta individualmente pelo ícone colorido na barra lateral esquerda ou visualizar todas as suas mensagens agregadas na Caixa Unificada (Unified Inbox).\n\nBoas leituras com o Speed Reader e alta produtividade!\nEquipe FlyMail`,
           isRead: false,
           isStarred: true,
           isPinned: true,
@@ -733,6 +750,25 @@ export default function App() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [selectedThreadId, handleArchive, handleTrash, handleToggleStar, handleToggleRead]);
+
+  // Se não houver nenhuma conta configurada, exibe a tela de boas-vindas / onboarding guiado de primeiro acesso
+  if (accounts.length === 0) {
+    return (
+      <div className="h-screen w-screen overflow-hidden bg-slate-950 font-sans antialiased">
+        <WelcomeOnboarding
+          onAccountAdded={handleAccountConnected}
+          onOpenManualWizard={() => setAccountWizardOpen(true)}
+        />
+
+        {/* Account Wizard Modal para conexão alternativa (Outlook, iCloud, IMAP) */}
+        <AccountWizardModal
+          isOpen={accountWizardOpen}
+          onClose={() => setAccountWizardOpen(false)}
+          onAccountConnected={handleAccountConnected}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans antialiased">
@@ -891,6 +927,7 @@ export default function App() {
         onClose={() => setSettingsOpen(false)}
         accounts={accounts}
         onAddAccount={handleAddAccount}
+        onDeleteAccount={handleDeleteAccount}
         darkMode={darkMode}
         onToggleDarkMode={() => setDarkMode(prev => !prev)}
         accentColor={accentColor}
